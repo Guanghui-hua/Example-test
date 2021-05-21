@@ -2,7 +2,7 @@
 rm(list=ls())   #清空变量
 
 ### 现在有一些学生有数学、科学、英语三门课的成绩
-### 我们想要组合这些成绩来表示这些学生的成绩
+### 我们想要综合这些成绩来表示这些学生的成绩
 ### 我们想要前20%得A,然后20%得B,然后依次  -->筛选
 ### 最后,我们想要按字母排序  -->排序
 
@@ -17,6 +17,14 @@ English <- c(25, 22, 18, 15, 20, 28, 15, 30, 27, 18)
 roster <- data.frame(Student, Math, Science, English,
                      stringsAsFactors=FALSE)  
 #roster的意思是名册，而rooster的意思是公鸡
+
+
+
+
+
+
+
+
 
 
 
@@ -44,6 +52,17 @@ log(exp(1));log2(2);log10(10)  #三种比较常用的对数函数
 log(3,3)  #以3为底的对数
 
 exp(1)  #指数函数
+
+
+
+
+
+
+
+
+
+
+
 #--------------------------统计函数--------------------------------
 vec<-c(1,2,3,4)
 mean(vec) #求均值
@@ -51,7 +70,7 @@ median(vec)  #求中位数
 sd(vec)  #修正的样本标准差
 var(vec)  #修正的样本方差
 mad(vec)  #中值绝对偏差
-quantile(vec,c(0.5,1))  #求分位数
+quantile(vec,c(0.5,1))  #按照区间两端点的值按照比例进行进行划分，返回划分区间的间断点
 range(vec)  #求极值
 sum(vec)  #求和
 min(vec)  #求最小值
@@ -69,6 +88,15 @@ diff(vec,lag = 3)  #差分，第n+3位减去第n位
 #> scale(vec,scale=FALSE)   直接减去均值，没有除以均方根
 #> scale(vec,center=FALSE)  没有减去均值，直接除以均方根
 scale(vec,center = TRUE,scale = TRUE)
+
+
+
+
+
+
+
+
+
 
 #——-------------------------概率函数-------------------------------------
 #在R里面，概率函数使用形式     [dbqr]distribution_abbreviation()    
@@ -106,21 +134,22 @@ y <- dnorm(x)
 plot(x, y,type = "l",xlab = "Normal Deviate",
 ylab = "Density",yaxs = "i")
 
-
 #标准正态分布z=1.96左侧面积是
 pnorm(1.96)    #等于 0.975
-
 #x~N(500,10)求分位数
 qnorm(0.9,mean=500,sd=100)    #等于628.16
 
 #产生50个服从正态分布的随机数
-rnorm(50, mean=50, sd=10)
-rnorm(50)
+rnorm(50, mean=50, sd=10) #生成服从标准正态的随机数，且可以指定均值和方差
 
+rnorm(50)
+mydata <- matrix(rnorm(30), nrow=6)
 
 #为随机数生成器选择随机种子
 #从均匀分布中产生伪随机数
 runif(5)  #[0,1]均匀分布中产生5个随机数
+x <- matrix(runif(12), nrow =3 )
+
 
 set.seed(1234)  #设置随机数种子
 runif(5)
@@ -129,6 +158,16 @@ runif(5)
 runif(5)
 runif(5)
 #**************注意随机数种子设置一次有效，所以如果想要随机数相同我们需要每次设置随机种子
+
+
+
+
+
+
+
+
+
+
 #-------------------------------字符函数----------------------------------------------------
 x="My name is Gray"
 nchar(x)  #返回字符串中的元素个数
@@ -167,33 +206,79 @@ toupper("abc")  #返回大写
 tolower("ABC")  #返回小写
 
 
+
+
+
+
+
+
 #---------------------有关正则表达式----------------------------------------
 #注意到grep() sub() strsplit() 能够寻找文本字符串(fixed=TRUE)或者一个正则表达式(fixed=FALSE)，FALSE是默认值
 #正则表达式提供了一个清楚和精确的语法对于在文本格式中匹配一个格式
 #比如正则表达式  ^[hc]?at   匹配任何字符串以 h 或者 c 或者 空值 开始，接着at的字符串，
 #所以能够匹配hat,cat,at但是不能匹配bat
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #---------------------其他有用的函数-------------------------------------
 lenth(x)  #返回对象的长度
 
+indices <- seq(1,10,2)
 #seq(from,to,by) 产生一个序列
 
+rep(1:3,2)
 #rep(x,n)  对x重复n次
 
-#cut(x,n) 把连续变量x分成n个水平的因子，产生一个有顺序的因子
 
-#pretty(x,n)  产生断点，把随机变量x分成，通过选择n+1个相等间隔的舍入值将连续变量x分为n个间隔。 常用于绘图
+#cut(x,n) 也就是可以进行  分箱  操作
+#cut():切割将x的范围划分为时间间隔，并根据其所处的时间间隔对x中的值进行编码。
+#参数：breaks:两个或更多个唯一切割点或单个数字（大于或等于2）的数字向量，给出x被切割的间隔的个数。
+#breaks:采用fivenum():返回五个数据：最小值、下四分位数、中位数、上四分位数、最大值。
+#labels：为区间数，打标签
+#ordered_result:逻辑：结果应该是一个有序的因素吗？
+demo <- runif(10)
+break1 <- fivenum(demo)
+label <- c("D","c","B","A")
+cut(demo,break1,labels = label,ordered_result = T)
+# [1] A    c    B    A    D    B    <NA> c    D    B   
+# Levels: D < c < B < A
 
+demo <- 1:10
+pretty(demo,4)
+#pretty(x,n)  选取n+1等间距的取整数，将连续变量x分割为n个区间
+#%%%%%%%%%%%%%%%从这里可以看出cut()函数和pretty()函数的区别%%%%%%%%%%%%%%%%
+#cut()函数是按照序列的值进行划分，区间是序列中的值，而且区间是左开右闭的，所以一定会有一个NA值，这个值就是序列中的最小值
+#pretty()函数是按照长度划分的，是均等划分
+
+
+
+name <- "Gray"
+cat("Hello",name,"\n")
+#Hello Gray 
+
+paste("Hello",name,"\n")
+#[1] "Hello Gray \n"
+
+cat(" i=",1,"\n")
+cat(" i=",1,sep = "  to be or not to be  ")
+cat(paste(letters, 100* 1:26), fill = TRUE, labels = paste0("{", 1:10, "}:"))
 #cat(...,file="myfile",append = FALSE)
-
-
-
-
-
-
-
-
-
+format(c(1,2,3))
+#format()函数可以把一个数值向量转化为字符型
 
 #%%%%%%%%%%%%%%%%R中的apply()函数和sapply()函数%%%%%%%%%%%%
 a <- matrix(1:9,nrow=3)
@@ -204,78 +289,288 @@ apply(a,2,min)
 x=c(1:5)
 sapply(x,function(x) {x^2})
 ##计算x从1-5的平方，并返回数值。
+
+
+#+++++++++++apply作用于matrix,而sapply作用于向量或者列表
+
+
+### 1. apply
+
+#当需要将特定的函数运用于结构化的数据块时，结构化的指的是某种矩阵格式。
+#例如：
+m <- matrix(data=cbind(rnorm(30, 0), rnorm(30, 2), rnorm(30, 5)), nrow=30, ncol=3)
+apply(m, 2, mean)
+#[1] -0.02664418  1.95812458 4.86857792
+
+#apply(m, 2, mean) 是将mean函数应用与矩阵 m 的列上，参数 2 指列（1 指行）。
+
+可#以自定义函数：
+apply(m, 2, function(x) length(x[x<0]))
+#[1] 14  1  0
+
+#其中，function(x) length(x[x<0]) 即是自定函数。
+
+# 2. sapply 和 lapply
+
+#这两个函数的功能和用法比较相似，作用于如向量或列表的数据集合上。
+#举一个sapply的例子，sapply作用于向量或列表：
+sapply(1:3, function(x) x^2)
+#[1] 1 4 9
+
+#lapply 比较相似，不过lapply的输出是一个列表而不是向量
+lapply(1:3, function(x) x^2)
+#[[1]]
+#[1] 1
+#
+#[[2]]
+#[1] 4
+#
+#[[3]]
+#[1] 9
+
+#sapply和lapply的区别可以通过对函数添加参数来消除：
+#在sapply函数的参数中添加 simplify=FALSE 即可使函数结果为list格式
+
+sapply(1:3, function(x) x^2, simplify=F)
+#[[1]]
+#[1] 1
+#
+#[[2]]
+#[1] 4
+#
+#[[3]]
+#[1] 9
+
+#在lapply函数外围在使用unlist函数即可使lapply函数结果为向量格式
+
+unlist(lapply(1:3, function(x) x^2))
+#[1] 1 4 9
+
+#3. 两种函数功能的相互转化：
+
+sapply(1:3, function(x) mean(m[,x]))
+#[1] -0.02664418  1.95812458 4.86857792
+
+sapply(1:3, function(x, y) mean(y[,x]), y=m)
+#[1] -0.02664418  1.95812458 4.86857792
+
+#这两个函数功能和 apply(m, 2, function(x) length(x[x<0])) 相同。
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-#---------------------------------------------------------------------------------------------
-#实例
-a<-5
-sqrt(5)
-b<-c(1.243,5.645,2.99)
-round(b)
-c<-matrix(runif(12),nrow=3)
-log(c)
-mean(c)
 
 mydata<-matrix(rnorm(30),nrow=6)
 apply(mydata,1,mean)
 apply(mydata,2,mean)
 apply(mydata,2,mean,trim=0.4)
+#mean()是不稳健的，trim可以去掉前后20%的极值
+#而trim参数的含义是：修剪掉排在首尾的部分数据，其实就是去除异常值以后再进行求均值。
+#trim 的中文翻译就是   修剪，修整   的意思
 
 
 
 
 
 
-#---------------------------------------------------------------------------------------------
 
-z <- scale(roster[,2:4])
-score <- apply(z, 1, mean)
+
+
+
+#----------------------------数据管理挑战的解决办法-----------------------------------------------------------------
+
+Student <- c("John Davis", "Angela Williams",
+             "Bullwinkle Moose","David Jones", "Janice Markhammer",
+             "Cheryl Cushing","Reuven Ytzrhak", "Greg Knox",
+             "Joel England","Mary Rayburn")
+Math <- c(502, 600, 412, 358, 495, 512, 410, 625, 573, 522)
+Science <- c(95, 99, 80, 82, 75, 85, 80, 95, 89, 86)
+English <- c(25, 22, 18, 15, 20, 28, 15, 30, 27, 18)
+roster <- data.frame(Student, Math, Science, English,
+                     stringsAsFactors=FALSE)  
+
+#把学生成绩进行分级
+z <- scale(roster[,2:4])  #标准化处理
+score <- apply(z, 1, mean)  #标准化处理后按列求均值（注意这里没有加权）
 roster <- cbind(roster, score)
-y <- quantile(score, c(.8,.6,.4,.2))
+y <- quantile(score, c(.8,.6,.4,.2)) #按照区间两端点的值按照比例进行进行划分，返回划分区间的间断点
 roster$grade[score >= y[1]] <- "A"
 roster$grade[score < y[1] & score >= y[2]] <- "B"
 roster$grade[score < y[2] & score >= y[3]] <- "C"
 roster$grade[score < y[3] & score >= y[4]] <- "D"
 roster$grade[score < y[4]] <- "F"
+
+
+
+### 接下来是为了完成按照字母进行排序
 name <- strsplit((roster$Student), " ")
 Lastname <- sapply(name, "[", 2)
 Firstname <- sapply(name, "[", 1)
+# "["是一个函数,可以提取对象的一部分，注意strsplit()函数返回的是一个列表，所以sapply()是提取了name这个列表的第一个成分或者第二个成分
+
 roster <- cbind(Firstname,Lastname, roster[,-1])
+#可以利用函数cbind() 和rbind() 把向量和矩阵拼成一个新的矩阵。
+#概略地说，cbind() 把矩阵横向合并成一个大矩阵（列方式），而rbind()是纵向合并（行方式）。
+
 roster <- roster[order(Lastname,Firstname),]
 
 
-(roster)
 
 
-for(i in 1:10)print('Hello')
 
 
-i<-5
-while(i>0){print('Hello');i=i-1}
-
-#if (is.character(grade)) grade <- as.factor(grade)
 
 
-#(Numercial and character functions)  #数值与字符函数
-x=-324.32423
-abs(x)
-sqrt(x)
-ceiling(x)
-floor(x)
-trunc(x)
-round(x,digits=3)
-signif(x,digits=4)
 
-x=pi
-sin(x)
 
-x=seq(1,10,by=2)  #如何生成一个序列
+#------------控制流(Control flow) R中程序也是按照一条一条执行，但是有时候我们需要改变顺序--------------
 
-#scale()函数
-#scale函数是将一组数进行处理，默认情况下是将一组数的每个数都减去这组数的平均值后再除以这组数的均方根。
-#> scale(ss,scale=FALSE)   直接减去均值，没有除以均方根
-#> scale(ss,center=FALSE)  没有减去均值，直接除以均方根
-newdata <- scale(mydata)
+## statement statement,我觉得就是语句的意思 是一个单独的R语句一个复杂的语句（一组R的声明放在花括号里面并且被分号分开）
+## cond      cond 是判断TRUE或者FALSE
+## expr      expr 是计算数字或者字符串的一种语句
+## seq       seq 是一列数字或者字符串
 
+#============================looping constructs======================
+#looping construct-->循环构造    重复执行
+#loop是循环，环形的意思
+#looping constructs 重复执行一条语句知道条件为FALSE
+## for  
+###for循环重复执行一条语句直到一条语句不在包含一个序列seq中的值
+###while: 一个while循环重复执行一条语句直到条件不再是TRUE
+  
+for(i in 1:10)print("Hello world!")
+i<5
+while(i>0){print("Hello world!");i<-i-1}
+
+#==========================conditional execution======================
+#在Conditional execution中，只有满足特定的条件语句才能被执行
+##if-else语法是
+# if (cond) statement
+# if (cond) statement1 else statement2
+
+##ifelse:  ifelse结构是一个复杂的向量化的if-else结构
+##ifelse语法是
+##ifelse(cond,statement1,statement2)
+##不过看起来好像ifelse中statement只能有两条
+
+#%%%%%%%%%%%%%%%%%%%%%%%%我感觉关于条件判断更重要的下面这条语句%%%%%%%%%%%%%%%%%%%
+#
+
+##switch: switch基于表达式的值来执行语句
+##switch语法是
+##switch(expr,...)
+
+#-----------------------函数function---------------------------------------------
+##函数的结构看起来
+##myfunction<-function(arg1,arg2,...){
+##	statements
+##	return(object)
+##}
+
+
+mystats <- function(x, parametric=TRUE, print=FALSE) {
+if (parametric) {
+center <- mean(x); spread <- sd(x)
+} else {
+center <- median(x); spread <- mad(x)
+}
+if (print & parametric) {
+cat("Mean=", center, "\n", "SD=", spread, "\n")
+} else if (print & !parametric) {
+cat("Median=", center, "\n", "MAD=", spread, "\n")
+}
+result <- list(center=center, spread=spread)
+return(result)
+}
+# trying it out
+set.seed(1234)
+x <- rnorm(500)
+y <- mystats(x)
+y <- mystats(x, parametric=FALSE, print=TRUE)
+# Another switch example
+mydate <- function(type="long") {
+switch(type,
+long = format(Sys.time(), "%A %B %d %Y"),
+short = format(Sys.time(), "%m-%d-%y"),
+cat(type, "is not a recognized type\n"))
+}
+mydate("long")
+mydate("short")
+mydate()
+mydate("medium")
+
+
+
+g.data=function(modeu,modeq,b0,b1,g1,err,x,AA){
+if(modeu=="l"& modeq=="ls")
+Y=1+x%*%b0+2*(x%*%g1*AA)+err
+if(modeu=="l"& modeq=="ee")
+Y=1+x%*%b0+(exp(x%*%g1)-1)*AA+err
+if(modeu=="s"& modeq=="cb")
+Y=1+sin(pi*x%*%b0)+0.5*(x%*%b1)^2+(x%*%g1)^3*AA+err
+if(modeu=="it"& modeq=="cb")
+Y=1+(x[,1]*x[,2]+0.5*x[,3]^2)+(x%*%g1)^3*AA+err
+return(Y)
+}
+
+gamma0=c(1,1,-1,1)
+beta0=c(1,-1,1,1)
+beta1=c(1,0,-1,0)
+modeut=c("l","s","it")
+modeqt=c("ls","cb","ee")
+nu=1;nq=1
+pii1=0.5
+n=200
+p=length(beta0)
+pp=seq(1:p)
+rho=0
+R=rho^abs(matrix(kronecker(pp,pp,FUN="-"),p,p))
+set.seed(123451*nu*nq)
+X=matrix(rnorm(n*p),n,p) %*% t(chol(R))
+Xtilde=cbind(rep(1,n),X)
+A=rbinom(n,1,pii1)
+err=rnorm(n,0,0.5)
+pii=mean(A)
+Api=A/pii
+Y=g.data(modeut[nu],modeqt[nq],beta0,beta1,gamma0,err,X,A)
+
+
+
+
+
+
+
+
+
+
+
+#------------------------aggregation and reshaping 聚合和重塑---------------------
+## transpose  转置 t()
+## 聚合数据   aggregate(x,by,FUN)
+
+cars <- mtcars[1:5, 1:4]
+cars
+mpg cyl disp hp
+Mazda RX4 21.0 6 160 110
+Mazda RX4 Wag 21.0 6 160 110
+Datsun 710 22.8 4 108 93
+Hornet 4 Drive 21.4 6 258 110
+Hornet Sportabout 18.7 8 360 175
+t(cars)
+Mazda RX4 Mazda RX4 Wag Datsun 710 Hornet 4 Drive Hornet mpg 21 21 22.8 21.4 cyl 6 6 4.0 6.0 disp 160 160 108.0 258.0 hp 110 110 93.0 110.0 # Listing 5.10 - Aggregating data
+options(digits=3)
+attach(mtcars)
+aggdata <-aggregate(mtcars, by=list(cyl,gear),
+FUN=mean, na.rm=TRUE)
+aggdata
+
+
+##melting
+
+##casting
+
+
+
+
+
+#------------------------transform()函数------------------------------------------
 #transform()函数  作用：为原数据框添加新的列，改变原变量列的值，还可通过赋值NULL删除列变量
 newdata=transform(newdata,t=c(1:6))
 transform(newdata,t=NULL)
@@ -283,20 +578,3 @@ transform(newdata,t=NULL)
 
 
 
-#绘制标准正态曲线
-x <- pretty(c(-3,3), 30)
-y <- dnorm(x)
-plot(x, y,type = "l",xlab = "Normal Deviate",ylab = "Density",yaxs = "i")
-
-pnorm(1.96)  #根据z值可以查看在这一点左侧的面积
-qnorm(.9, mean=500, sd=100)
-
-rnorm(50, mean=50, sd=10)  #生成服从标准正态的随机数，且可以指定均值和方差
-
-
-
-c<-matrix(runif(12),nrow=3)
-mydata<-matrix(rnorm(30),nrow=6)
-(mydata)
-apply(mydata,2,mean)
-apply(mydata,2,mean,trim=.4)
