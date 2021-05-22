@@ -19,15 +19,6 @@ roster <- data.frame(Student, Math, Science, English,
 #roster的意思是名册，而rooster的意思是公鸡
 
 
-
-
-
-
-
-
-
-
-
 #-----------------------------数学函数-----------------------------------
 num=-pi
 abs(num)  #取绝对值
@@ -366,14 +357,6 @@ apply(mydata,2,mean,trim=0.4)
 #trim 的中文翻译就是   修剪，修整   的意思
 
 
-
-
-
-
-
-
-
-
 #----------------------------数据管理挑战的解决办法-----------------------------------------------------------------
 
 Student <- c("John Davis", "Angela Williams",
@@ -413,13 +396,6 @@ roster <- roster[order(Lastname,Firstname),]
 
 
 
-
-
-
-
-
-
-
 #------------控制流(Control flow) R中程序也是按照一条一条执行，但是有时候我们需要改变顺序--------------
 
 ## statement statement,我觉得就是语句的意思 是一个单独的R语句一个复杂的语句（一组R的声明放在花括号里面并且被分号分开）
@@ -445,17 +421,113 @@ while(i>0){print("Hello world!");i<-i-1}
 # if (cond) statement
 # if (cond) statement1 else statement2
 
+
+grade=61
+if(grade>60)print("Passed")else print("Failed")
+#[1] "Passed"
+outcome <- if(grade>60)print("Passed")else print("Failed")
+#[1] "Passed"
+print(outcome)
+#[1] "Passed"
+grade="91"
+if(is.character(grade))grade<-as.factor(grade)  #如果grade是字符型变为因子型
+if(!is.factor(grade))grade<-as.factor(grade)else print("already a factor ")  #如果factor不是因子型那么就变为因子型，如果是因子型就输出"already a factor"
+
+####我觉得这个ifelse完全就是个鸡肋函数，不记也罢
 ##ifelse:  ifelse结构是一个复杂的向量化的if-else结构
 ##ifelse语法是
 ##ifelse(cond,statement1,statement2)
 ##不过看起来好像ifelse中statement只能有两条
+#这个ifelse怪的很，如果不赋值的话，就会输出两次，搞不懂
+ifelse(grade>60,print("Passed"),print("Failed"))
+# [1] "Passed"
+# [1] "Passed"
+outcome <- ifelse(grade>60,print("Passed"),print("Failed"))
+#[1] "Passed"
+
+
 
 #%%%%%%%%%%%%%%%%%%%%%%%%我感觉关于条件判断更重要的下面这条语句%%%%%%%%%%%%%%%%%%%
-#
+#if(cond){statement}
+# else if(cond){statement}
+# else if(cond){statement}
+# else if(cond){statement}
+# else{statement}
 
+#如果90+  A
+#80~90    B
+#70~80    C
+#60~70    D
+#60-      Failed
+
+
+#错误示范
+# gradeL<-function(grade){ 
+#   if(grade>=90){
+#     result="A"
+#   }else if(80<=grade<90){
+#     result="B"
+#   }
+#   else if(70<=grade<80){
+#     result="C"
+#   }else if(60<=grade<70){
+#    result="D"
+#   }else{result="Failed"}
+#   return(result)
+# }
+# 总是报错，原来是因为在R中70<=grade<80这样表达式是错误的
+# 需要写成70<=grade&grade<80
+
+
+
+gradeLevel <- function(grade){
+if(grade>=90){
+    result="A"
+  }
+else if(80<=grade&grade<90){
+    result="B"
+  }
+else if(70<=grade&grade<80){
+    result="C"
+  }
+else if(60<=grade&grade<70){
+    result="D"
+}
+else{result="Failed"}
+return(result)
+}
+
+gradeLevel(99)
+gradeLevel(88)
+gradeLevel(77)
+gradeLevel(66)
+gradeLevel(55)
+
+
+#***********************switch实际上是一个函数*******************************
 ##switch: switch基于表达式的值来执行语句
-##switch语法是
+##switch语法结构是
 ##switch(expr,...)
+##expr是参数的表达式，其值可以是数字或者字符串；
+##我觉得把switch()翻译成“闸”很合适
+##根据expr的值来  “开闸” 
+##后面的...可以可以认为是一个列表，根据expr的值来确定输出...中的哪一个值， 
+
+
+#如果expr计算出来是一个整数值，那么switch()返回后面的...的位置的值
+switch(2,"python","C++","R","Java")
+
+#当...这个list中的元素是有名字的定义时，当expr等于元素名时，返回变量名对应的值，否则没有返回值
+type="a"
+switch(type,
+       "a"="Hello world",
+       "b"="Fucking world")
+
+func1 <- function(type){
+  switch(type,
+         A="Hello world",
+         B="Fucking world")
+}
 
 #-----------------------函数function---------------------------------------------
 ##函数的结构看起来
@@ -533,41 +605,23 @@ Y=g.data(modeut[nu],modeqt[nq],beta0,beta1,gamma0,err,X,A)
 
 
 
-
-
-
-
-
-
-
-
 #------------------------aggregation and reshaping 聚合和重塑---------------------
 ## transpose  转置 t()
 ## 聚合数据   aggregate(x,by,FUN)
-
 cars <- mtcars[1:5, 1:4]
-cars
-mpg cyl disp hp
-Mazda RX4 21.0 6 160 110
-Mazda RX4 Wag 21.0 6 160 110
-Datsun 710 22.8 4 108 93
-Hornet 4 Drive 21.4 6 258 110
-Hornet Sportabout 18.7 8 360 175
+View(cars)
 t(cars)
-Mazda RX4 Mazda RX4 Wag Datsun 710 Hornet 4 Drive Hornet mpg 21 21 22.8 21.4 cyl 6 6 4.0 6.0 disp 160 160 108.0 258.0 hp 110 110 93.0 110.0 # Listing 5.10 - Aggregating data
 options(digits=3)
 attach(mtcars)
-aggdata <-aggregate(mtcars, by=list(cyl,gear),
-FUN=mean, na.rm=TRUE)
-aggdata
-
+View(mtcars)
+View(cyl)
+View(gear)
+aggdata <-aggregate(mtcars, by=list(cyl,gear),FUN=mean, na.rm=TRUE)
+View(aggdata)
 
 ##melting
 
 ##casting
-
-
-
 
 
 #------------------------transform()函数------------------------------------------
