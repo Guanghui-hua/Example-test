@@ -1,3 +1,32 @@
+###基本画图方法
+#画图一次增加一条命令，增加feature直到你想要的样子
+#使用R画图主要就是两种画图命令----High level ones & Low level ones
+# 高级画图函数例如 plot(),hist(),curves(),boxplot()
+# 低级画图函数例如 line(),abline()
+#--------R的画图秘诀就是使用高级画图命令  加上  几个低级画图命令
+
+
+
+
+attach(mtcars)
+plot(wt,mpg)
+abline(lm(mpg~wt))
+title("Regression of MPG on Weight")
+detach(mtcars)
+
+
+
+
+
+
+
+
+
+
+
+
+
+#---------------------条形图&直方图&核密度图&箱线图&小提琴图-----------------------------
 library(vcd)
 attach(Arthritis)
 counts<-table(Improved,Treatment)  #table可以计算频数

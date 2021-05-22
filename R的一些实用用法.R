@@ -23,33 +23,11 @@ rm(list=ls())
 rm()函数
 
 
-#7. 实用函数
-length(x)	        #返回对象x的长度
-seq(from,to,by)	  #生成序列
-rep(x,n)	        #将x重复n次
-cut(x,n)	        #连续变量离散化。选项ordered_result=TRUE
-pretty(x,n)	      #创建美观的分割点。选取n+1等间距的取整数，将连续变量x分割为n个区间
-#cat(…,file=‘myfile’,append=TRUE)	  #将…中的对象，将其输出到屏幕或文件中。
-
-
-#下面是例子
-x<-seq(1,20,2)
-length(x)
-y<-rep(3,10)
-cut(x,4)  #把向量分成4个水平的因子
-pretty(c(2,4),10)  #注意输入的应该是一个包含首尾的两个向量，以表示连续向量
-
-
-#scale()函数
-#scale函数是将一组数进行处理，默认情况下是将一组数的每个数都减去这组数的平均值后再除以这组数的均方根。
-#> scale(ss,scale=FALSE)   直接减去均值，没有除以均方根
-#> scale(ss,center=FALSE)  没有减去均值，直接除以均方根
-newdata <- scale(mydata)
-
-#transform()函数  作用：为原数据框添加新的列，改变原变量列的值，还可通过赋值NULL删除列变量
-newdata=transform(newdata,t=c(1:6))
-transform(newdata,t=NULL)
-#注意这里面的transform()函数不会改变原来数据框，如果想要改变原来数据框，需要赋值才行
-
-
+#7.原来R中也是又缩进的，另起一行就相当于一个；的作用，具体看例子
+i=1;while(i<10){print("Hello world");i=i+1}
+i=1;while(i<10){print("Hello world")
+  i=i+1}
+#以上两个都可以执行，下面这个就会报错
+i=1;while(i<10){print("Hello world")i=i+1}
+#错误: unexpected symbol in "while(i<10){print("Hello world")i"
 

@@ -480,6 +480,7 @@ outcome <- ifelse(grade>60,print("Passed"),print("Failed"))
 
 
 
+
 gradeLevel <- function(grade){
 if(grade>=90){
     result="A"
@@ -502,6 +503,61 @@ gradeLevel(88)
 gradeLevel(77)
 gradeLevel(66)
 gradeLevel(55)
+
+
+#还有一处我错了好久
+# if(grade>=90){
+#   result="A"
+# }
+# else if(80<=grade&grade<90){
+#   result="B"
+# }
+# else if(70<=grade&grade<80){
+#   result="C"
+# }
+# else if(60<=grade&grade<70){
+#   result="D"
+# }
+# else{result="Failed"}
+
+#上面这串代码我在函数中写是完全没有错误的，但是我如果单独写在外面，就会出现
+#下面这样的错误
+# > if(grade>=90){
+#   +     result="A"
+#   + }
+# > else if(80<=grade&grade<90){
+#   错误: 意外的'else' in "else"
+#   >     result="B"
+#   > }
+# 错误: 意外的'}' in "}"
+# > else if(70<=grade&grade<80){
+#   错误: 意外的'else' in "else"
+#   >     result="C"
+#   > }
+# 错误: 意外的'}' in "}"
+# > else if(60<=grade&grade<70){
+#   错误: 意外的'else' in "else"
+#   >     result="D"
+#   > }
+# 错误: 意外的'}' in "}"
+# > else{result="Failed"}
+# 错误: 意外的'else' in "else"
+
+###如何解决，我发现else必须接在{statement}后面不会报错，
+#不能以else if开头，修改之后结果如下
+
+# > grade=66
+# > if(grade>=90){
+# +     result="A"
+# + }else if(80<=grade&grade<90){
+# +     result="B"
+# + }else if(70<=grade&grade<80){
+# +     result="C"
+# + }else if(60<=grade&grade<70){
+# +     result="D"
+# + }else{result="Failed"}
+# > result
+# [1] "D"
 
 
 #***********************switch实际上是一个函数*******************************
