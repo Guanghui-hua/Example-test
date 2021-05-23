@@ -1,20 +1,149 @@
-###基本画图方法
+##我的理解，注意高级函数，低级函数，使用par()函数对刻度、文字大小、图的线形和点的种类等的设置
+##三种配合使用
+
+#----------------------#基本画图方法--------------------------------------------------------
+
 #画图一次增加一条命令，增加feature直到你想要的样子
-#使用R画图主要就是两种画图命令----High level ones & Low level ones
+
+#使用R基本的画图函数有两种画图命令----High level ones & Low level ones
+
 # 高级画图函数例如 plot(),hist(),curves(),boxplot()
+
 # 低级画图函数例如 line(),abline()
-#--------R的画图秘诀就是使用高级画图命令  加上  几个低级画图命令
 
+#示例需要用到的数据
+dose <- c(20, 30, 40, 45, 60)
+drugA <- c(16, 20, 27, 40, 60)
+drugB <- c(15, 18, 25, 31, 40)
 
+#--------一个示例-------------------
 
-
+dev.new()  #使用这个命令可以是图像跳出来而不是在右下角显示
 attach(mtcars)
-plot(wt,mpg)
-abline(lm(mpg~wt))
+plot(wt,mpg,col="red")
+grid(lwd=3)
+abline(lm(mpg~wt),col="blue")  #看来高级函数和低级函数都可以设置颜色
 title("Regression of MPG on Weight")
 detach(mtcars)
 
 
+#---------------------------dev.set(dev.next())的作用------------------------------------------------------
+##通过下面这个例子搞清楚dev.off()函数和dev.set()和dev.next()都有什么作用
+dev.new()  ####看来这个dev.new()和x11()实现的功能是一样的！！！都是生成一张什么都没有的画布
+x11()      #生成一个画布
+plot(1:10) #画点
+
+x11()      #生成第二张画布
+plot(rnorm(10))      #画第二张图，是随机的10个点
+
+dev.set(dev.prev())  #设置第一张图
+abline(0, 1)        #画穿过1：10的线
+
+dev.set(dev.next()) #开始设置另一张图
+abline(h = 0, col = "gray") #画一条灰色的参考线
+
+dev.set(dev.prev())   #返回继续设置前面一张图片，不然后面dev.off()只能对最后一张图片起作用
+
+dev.off()
+dev.off() #同时关闭两张图片
+
+#-----------------------设置图形参数------------------------------------------------
+## 有两种设置图形参数的方法
+###==========================通过par()函数
+dev.new()
+opar<-par(no.readonly = TRUE)
+par(lty=2)     #控制连线类型
+par(pch=17)    #控制绘图符号类型
+par(bg="white")  #控制背景颜色
+par(cex.axis=0.5)  #控制坐标轴刻度
+#par(mfcol = c(2,2))  #按照列分割绘图窗口
+#par(ps=1.5)
+#par(mfrow = c(2,3))
+##par(type = "b")  
+#报错了，看来par()函数并不能设置type参数
+#plot(dose,drugA,type = "b")
+plot(dose,drugA,type = "b")
+par(opar)
+
+###=========================通过高级画图函数提供的optionsName=value的方式
+plot(dose,drugA,lty = 2,pch = 17,type = "b" )
+plot(dose,drugA,lty = 2,pch = 17,type = "S" )  #阶梯形，没见过...
+#但是高级画图函数有时候并不能提供所有参数
+
+####=====================R中basic画图用到的函数&参数=============================================
+# R中常用的几个高级绘图函数
+# plot(x,y)       #绘制x与y的二元图
+# pair(x,y)       #多维数据的成对散点图
+# coplot(x,y|z)   #关于z的每个数值绘制x与y的二元图
+# matplot(x,y)    #二元图，其中x的列对应y的相应的列
+# boxplot(x,y)
+# barplot(x,y)
+# hist(x,y)
+# qqnorm(x)
+# qqplot(x,y)
+# contour(x,y,z)
+# filled.contour(x,y,z)
+# persp(x,y,z)
+# 
+# 高级绘图函数的选项及缺省值
+# 
+# add=FALSE      #如果是TRUE 那么叠加到前一个图上
+# axes=TRUE      #FALSE  不绘制轴与边框
+# xlim=, ylim=   #指定坐标轴的上下限
+# xlab=, ylab=   #坐标轴的标签（字符型）
+# main=          #主标题（字符型）
+# sub=           #副标题（小写，字符型）
+# type="p"       #指定图形的类型
+# "l"------------线
+# "p"------------点
+# "b"------------点连线
+# "o"------------点连线，但是线在点上
+# "h"------------垂直线
+# "s"------------阶梯式，垂直线顶端显示数据
+# "S"------------阶梯式，但是在垂直线底端显示数据
+# 
+# 
+# 常用的低级绘图函数
+# 注意，低级绘图函数一定要放在高级绘图函数的后面，不然会显示不出来
+# points(x,y)   #添加点
+# lines(x,y)    #添加线
+# curve(expr,...)   #添加曲线
+# text(x,y,labels,...) #在(x,y)处添加文字
+# mtext(text,side=3,line=0,...)  #在边空添加文字
+# abline(a,b)   #绘制斜率为b和截距为a的直线
+# abline(h=y)   #在纵坐标y处画水平线
+# abline(v=x)   #在横坐标x处画垂直线
+# *******************************感觉这个厉害了--------->     abline(lm.obj) #画由线性回归对象lm.obj确定的回归线
+# legend(x,y,legend) #在点经（x,y)添加图例
+# title()       #添加标题，也可以添加一个副标题
+# axis(side,vect)  #画坐标轴
+# box()         #在当前的图上加上边框
+# rug(x)        #在x-轴上用短线画出x数据的位置，应该就是表示频数的那个函数
+# 
+# 
+# 绘图函数的参数说明，help(par)中可以得到绘图参数（73个）的说明
+# par() 会永久地改变绘图参数，所以经常加上以下语句
+# opar <-par(no.readonly=TRUE)  #记录下par()地默认参数
+# par(opar)  #绘图完毕之后，恢复默认参数
+# 常用的绘图参数
+# bg     #指定背景色
+# cex    #控制符号和文字大小的值
+# 	cex.axis  #控制坐标轴刻度数字大小
+# 	cex.lab   #控制坐标轴标签文字大小
+# 	cex.main  #控制标题文字大小
+# 	cex.sub   #控制副标题文字大小
+# font   #控制文字字体的整数，还可用于axis,lab,main,sub
+# lty    #控制连线的线型 可以试一下1,2,3,4,5,6各是什么类型
+# lwd    #控制连线宽度
+# mar= c(bottom,left,top,right)    #控制图形四侧的空行数
+# mfcol = c(nr,nc)    #按列分割绘图窗口为nr行nc列
+# mfrow = c(nr,nc)    #按行分割绘图窗口为nr行nc列
+# pch    #控制绘图符号的类型 
+# ps     #控制文字大小的整数，单位为磅(points)
+
+#下面这两个没有试验明白
+# xlog   #设定x轴为普通(FALSE),还是对数坐标(TRUE)
+# ylog   #设定y轴为普通(FALSE),还是对数坐标(TRUE)
 
 
 
