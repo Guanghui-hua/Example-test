@@ -49,7 +49,7 @@ dev.off() #同时关闭两张图片
 
 #-----------------------设置图形参数------------------------------------------------
 ## 有两种设置图形参数的方法
-###==========================通过par()函数
+###==========================通过par()函数=====================
 dev.new()
 opar<-par(no.readonly = TRUE)
 par(lty=2)     #控制连线类型
@@ -89,6 +89,9 @@ plot(dose,drugA,lty = 2,pch = 17,type = "S" )  #阶梯形，没见过...
 # 
 # add=FALSE      #如果是TRUE 那么叠加到前一个图上
 # axes=TRUE      #FALSE  不绘制轴与边框
+# yaxt='n'       #不显示y轴刻度线和刻度标签，只留下纵轴的框架
+# xaxt = "n"     #不显示x轴刻度线和刻度标签，只留下横轴的框架
+# ann=FALSE  #会调用函数plot.default使对坐标轴名称、整体图像名称不做任何注解。默认值为TRUE。
 # xlim=, ylim=   #指定坐标轴的上下限
 # xlab=, ylab=   #坐标轴的标签（字符型）
 # main=          #主标题（字符型）
@@ -113,7 +116,7 @@ plot(dose,drugA,lty = 2,pch = 17,type = "S" )  #阶梯形，没见过...
 # abline(a,b)   #绘制斜率为b和截距为a的直线
 # abline(h=y)   #在纵坐标y处画水平线
 # abline(v=x)   #在横坐标x处画垂直线
-# *******************************感觉这个厉害了--------->     abline(lm.obj) #画由线性回归对象lm.obj确定的回归线
+# *******************************感觉这个厉害了----> abline(lm.obj) #画由线性回归对象lm.obj确定的回归线
 # legend(x,y,legend) #在点经（x,y)添加图例
 # title()       #添加标题，也可以添加一个副标题
 # axis(side,vect)  #画坐标轴
@@ -126,6 +129,8 @@ plot(dose,drugA,lty = 2,pch = 17,type = "S" )  #阶梯形，没见过...
 # opar <-par(no.readonly=TRUE)  #记录下par()地默认参数
 # par(opar)  #绘图完毕之后，恢复默认参数
 # 常用的绘图参数
+# mar    #设置边距参数和背景数
+# pin    #用于控制图形的大小 例如par(pin = c(2,3))  表示图形的长宽之比为x轴为2，y轴为3
 # bg     #指定背景色
 # cex    #控制符号和文字大小的值
 # 	cex.axis  #控制坐标轴刻度数字大小
@@ -133,12 +138,12 @@ plot(dose,drugA,lty = 2,pch = 17,type = "S" )  #阶梯形，没见过...
 # 	cex.main  #控制标题文字大小
 # 	cex.sub   #控制副标题文字大小
 # font   #控制文字字体的整数，还可用于axis,lab,main,sub
-# lty    #控制连线的线型 可以试一下1,2,3,4,5,6各是什么类型
+###### lty    #控制连线的线型 可以试一下1,2,3,4,5,6各是什么类型
 # lwd    #控制连线宽度
 # mar= c(bottom,left,top,right)    #控制图形四侧的空行数
 # mfcol = c(nr,nc)    #按列分割绘图窗口为nr行nc列
 # mfrow = c(nr,nc)    #按行分割绘图窗口为nr行nc列
-# pch    #控制绘图符号的类型 
+###### pch    #控制绘图符号的类型 
 # ps     #控制文字大小的整数，单位为磅(points)
 
 #下面这两个没有试验明白
@@ -146,57 +151,127 @@ plot(dose,drugA,lty = 2,pch = 17,type = "S" )  #阶梯形，没见过...
 # ylog   #设定y轴为普通(FALSE),还是对数坐标(TRUE)
 
 
+#=============================layout()函数==========================
+# 关于画图中的layout()函数
+#参数matrix()是矩阵，非0数字代表绘制图形的**顺序**，相同数字代表占位符；
+#”0”代表空缺，不绘制图形
+#后面的数字表示生成一个什么样的整体图形，以矩阵形式表达
+#byrow意思是默认按列生成，参数是TRUE则是按行生成
+
+#绘制的是3行2列的图像，矩阵按行排序
+attach(mtcars)
+layout(matrix(c(1,1,2,0,3,4), 3, 2,byrow = TRUE))
+hist(wt)
+hist(mpg)
+hist(disp)
+hist(carb)
+detach(mtcars)
+
+
+#绘制的是3行2列，按列排序
+dev.new()
+attach(mtcars)
+layout(matrix(c(1,1,2,0,3,4), 3, 2))
+hist(wt)
+hist(mpg)
+hist(disp)
+hist(carb)
+detach(mtcars)
+
+##一共有3*2=6个格子，所以前面必须有6个数字，数字表示要画的图的序号
+##3行2列我可以认为是一共有6个格子，那些数字意思就是图片的序号
+##按列排序，那么第一个图占据第一列的前两个格子，
+##第二个图占据第一列的第三个格子
+##第三个图占据第二列第二个格子
+
+
+#===================图例legend()中的参数============================
+#### legend()函数添加参数的几种方式
+# 1. 通过"toright"等内置位置
+# 可以把"toright"换成"bottomright" "bottom" 
+# "bottomleft" "left" "topleft" "top" "right" "center"
+# 2. 通过设置坐标x,y
+#我们可以通过画参考线的方法来设置来确定x大致合理的位置
+# 3. 通过设置locator(1)参数通过鼠标在图中选
+# 我们还可以通过legend中自带的locator(1)参数，通过点选图上的位置来放置图例。
+
+####  ncol参数： 默认设定为1
+data(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
+boxplot(mpg ~ cyl, data=mtcars, 
+        xlab = "cyl, number of car cylinders", 
+        ylab = "mpg, miles per gallon", 
+        col = rainbow(nlevels(mtcars$cyl)))
+legend("topright", 
+       legend=as.character(levels(mtcars$cyl)),
+       fill = rainbow(nlevels(mtcars$cyl)), 
+       title = "cyl", 
+       ncol=nlevels(mtcars$cyl)) # nlevels(mtcars$cyl)=3
+
+
+#### bty参数：将bty设定为"n"可以去掉图例外围的方框。
+data(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
+boxplot(mpg ~ cyl, data=mtcars, 
+        xlab = "cyl, number of car cylinders", 
+        ylab = "mpg, miles per gallon", 
+        col = rainbow(nlevels(mtcars$cyl)))
+legend("topright", 
+       legend=as.character(levels(mtcars$cyl)),
+       fill = rainbow(nlevels(mtcars$cyl)), 
+       title = "cyl", 
+       bty="n")
+#### fill参数：可以用于填充图例当中颜色。这些颜色需要于图中(如boxplot)的一致。
+
+data(mtcars)
+mtcars$cyl <- factor(mtcars$cyl)
+boxplot(mpg ~ cyl, data=mtcars, 
+        xlab = "cyl, number of car cylinders", 
+        ylab = "mpg, miles per gallon", 
+        col = c("red","yellow","blue"))
+legend("topright", 
+       legend=as.character(levels(mtcars$cyl)),
+       fill = c("red","yellow","blue")) #要与boxplot中的col参数一致
 
 
 
-
-
-
-
-
+#============================关于Hmisc包=====================================
+# R语言中的图形一般情况下，只有主刻度线，没有**次要刻度线**；
+# 如果要创建次要刻度线，需要使用Hmisc第三方包中的函数
+library(Hmisc)  
+minor.tick(nx=3,ny=3,tick.ratio=0.5)
 
 #---------------------条形图&直方图&核密度图&箱线图&小提琴图-----------------------------
 library(vcd)
 attach(Arthritis)
 counts<-table(Improved,Treatment)  #table可以计算频数
 
-##ggplot可以画出来3D图
-
-
-#stack barplot
-barplot(counts,
-        main = "Stacked Bar Plot",  
-        col=c('red','yellow','blue'))
-#注意main要使用双引号，不然会报错
-
-
-# 水平条形图
-barplot(counts,main= "Simple Bar Plot",
-        xlab = 'Improvement',ylab='Frequency',horiz=TRUE)
-
 plot(Improved,main="Simple Bar Plot",
      xlab="Improved",ylab="Frequency")
 
 plot(Improved,horiz=TRUE,main="Horiziontal Bar Plot",
      ylab="Improved",xlab="Frequency")
-
-
-
-
+  
 
 ### 堆砌条形图
 barplot(counts,
-        main="Stacked Bar Plot",
+        main="Stacked Bar Plot",   #注意main要使用双引号，不然会报错
         xlab="Treament",ylab="Frequency",
         col = c("red","yellow","green"),
         legend=rownames(counts))
+# 水平堆栈条形图
+barplot(counts,main= "Simple Bar Plot",
+        xlab = 'Improvement',ylab='Frequency',horiz=TRUE)
 
+##通过beside参数变得很不一样，变成两个类似直方图一样的东西
 barplot(counts,
         main="Grouped Bar Plot",
         xlab="Treament",ylab="Frequency",
         col = c("red","yellow","green"),
         legend=rownames(counts),beside = TRUE)
 detach(Arthritis)
+
+
 
 #-Bar plot for sorted mean values
 attach(states)
